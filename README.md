@@ -3,11 +3,11 @@ This records the multiple raids we run for Vanguard on Ashkandi-US for WoW Class
 
 ---
 
-# VANGUARD GUILD
-# ASHKANDI (US) - CLASSIC
-# http://www.ashkandi.org/
-# Vanguard Raid Recorder
-# Author: Feyde - Ashkandi (US)
+## VANGUARD GUILD
+## ASHKANDI (US) - CLASSIC
+## http://www.ashkandi.org/
+## Vanguard Raid Recorder
+## Author: Feyde - Ashkandi (US)
 
 Instructions: Clone and remove "-master" from the addon directory. Place in "Interface\AddOns" folder   
   
