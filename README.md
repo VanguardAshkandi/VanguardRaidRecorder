@@ -14,7 +14,7 @@ Easy Way:
 
 Hard Way:
 - Clone/download to zip, unzip and remove "-master" from the addon directory folder. 
-- It should read "VanguardRaidRecorder" and not "VanguardRaidRecorder-master". 
+	- It should read "VanguardRaidRecorder" and not "VanguardRaidRecorder-master". 
 - After that, place in "Interface\AddOns" folder 
 	- Example: C:\Program Files (x86)\World of Warcraft\_classic_\Interface\AddOns).
   
