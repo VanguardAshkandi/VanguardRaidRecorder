@@ -18,10 +18,10 @@ Instructions: Clone and remove "-master" from the addon directory. Place in "Int
 	- Coming Soon
   
 # Redundencies  
-		- Coming Soon
+	- Coming Soon
   
 # Commands  
-		- /vrr
+    - /vrr
     - /vanguard
     
 # Recommendations  
