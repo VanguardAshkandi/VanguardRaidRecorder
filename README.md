@@ -4,8 +4,7 @@ This records the multiple raids we run for Vanguard on Ashkandi-US for WoW Class
 ---
 
 ### VANGUARD GUILD
-### ASHKANDI (US) - CLASSIC
-### http://www.ashkandi.org/
+### ASHKANDI (US) - CLASSIC | https://www.ashkandi.org/
 ### Vanguard Raid Recorder
 ### Author: Feyde - Ashkandi (US)
 
