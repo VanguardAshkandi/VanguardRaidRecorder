@@ -1,0 +1,422 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="RaidControl.lua" />
+	<Button name="VanguardDKPGuildEntryTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="110" y="16" />
+		</Size>
+		<HighlightTexture name="$parentHightlight" file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD">
+			<Anchors>
+				<Anchor point="TOPLEFT" />
+			</Anchors>
+		</HighlightTexture>
+		<Scripts>
+			<OnClick>
+				RaidControl_GuildEntry_OnClick(self);
+			</OnClick>
+		</Scripts>
+		<NormalFont style="GameFontHighlightLeft" />
+	</Button>
+	<Button name="VanguardDKPStandbyEntryTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="110" y="16" />
+		</Size>
+		<HighlightTexture name="$parentHightlight" file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD">
+			<Anchors>
+				<Anchor point="TOPLEFT" />
+			</Anchors>
+		</HighlightTexture>
+		<Scripts>
+			<OnClick>
+				RaidControl_StandbyEntry_OnClick(self);
+			</OnClick>
+		</Scripts>
+		<NormalFont style="GameFontHighlightLeft" />
+	</Button>
+	<Frame name="RaidControl" hidden="true" parent="UIParent" toplevel="true" movable="true" enableMouse="true">
+		<Size>
+			<AbsDimension x="531" y="383" />
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER" x="14" y="4" />
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32" />
+			</EdgeSize>
+			<Color r="0" g="0" b="0" />
+		</Backdrop>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="$parent_Header" file="Interface\DialogFrame\UI-DialogBox-Header">
+					<Size>
+						<AbsDimension x="370" y="64"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="12"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parent_HeaderText" inherits="GameFontNormal" text="Vanguard DKP">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parent_Header">
+							<Offset>
+								<AbsDimension x="0" y="-14"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY">
+				<FontString inherits="GameFontNormal" text="Guild List:" justifyH="LEFT">
+					<Size x="119" y="17" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="28" y="-18" />
+					</Anchors>
+				</FontString>
+				<FontString inherits="GameFontNormal" text="Standby List:" justifyH="LEFT">
+					<Size x="119" y="17" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="195" y="-18" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame name="$parent_GuildFrame">
+				<Size x="165" y="315" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="16" y="-35" />
+				</Anchors>
+				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+					<BackgroundInsets>
+						<AbsInset left="11" right="12" top="12" bottom="11" />
+					</BackgroundInsets>
+					<TileSize val="32" />
+					<EdgeSize val="32" />
+				</Backdrop>
+			</Frame>
+			<Frame name="$parent_StandbyFrame">
+				<Size x="165" y="315" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="185" y="-35" />
+				</Anchors>
+				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+					<BackgroundInsets>
+						<AbsInset left="11" right="12" top="12" bottom="11" />
+					</BackgroundInsets>
+					<TileSize val="32" />
+					<EdgeSize val="32" />
+				</Backdrop>
+			</Frame>
+			<ScrollFrame name="$parent_StandbyScroll" inherits="FauxScrollFrameTemplate" hidden="true">
+				<Size x="118" y="282" />
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandbyFrame" relativePoint="TOPLEFT" x="14" y="-16" />
+				</Anchors>
+				<Scripts>
+					<OnVerticalScroll>
+						FauxScrollFrame_OnVerticalScroll(self, offset, 16, RaidControl_StandbyFrame_Update);
+					</OnVerticalScroll>
+					<OnShow>
+						RaidControl_StandbyFrame_Update()
+					</OnShow>
+				</Scripts>
+			</ScrollFrame>
+			<Button name="$parent_StandByEntry1" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandbyScroll" relativePoint="TOPLEFT" x="8" y="0" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry2" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry1" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry3" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry2" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry4" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry3" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry5" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry4" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry6" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry5" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry7" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry6" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry8" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry7" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry9" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry8" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry10" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry9" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry11" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry10" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry12" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry11" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry13" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry12" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry14" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry13" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry15" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry14" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry16" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry15" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_StandByEntry17" inherits="VanguardDKPStandbyEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_StandByEntry16" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<ScrollFrame name="$parent_GuildScroll" inherits="FauxScrollFrameTemplate" hidden="true">
+				<Size x="118" y="282" />
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildFrame" relativePoint="TOPLEFT" x="14" y="-16" />
+				</Anchors>
+				<Scripts>
+					<OnVerticalScroll>
+						FauxScrollFrame_OnVerticalScroll(self, offset, 16, RaidControl_GuildFrame_Update);
+					</OnVerticalScroll>
+					<OnShow>
+						RaidControl_GuildFrame_Update()
+					</OnShow>
+				</Scripts>
+			</ScrollFrame>
+			<Button name="$parent_GuildEntry1" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildScroll" relativePoint="TOPLEFT" x="8" y="0" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry2" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry1" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry3" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry2" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry4" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry3" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry5" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry4" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry6" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry5" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry7" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry6" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry8" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry7" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry9" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry8" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry10" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry9" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry11" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry10" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry12" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry11" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry13" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry12" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry14" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry13" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry15" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry14" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry16" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry15" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_GuildEntry17" inherits="VanguardDKPGuildEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_GuildEntry16" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+
+			<Button name="$parent_AddStandby" inherits="UIPanelButtonTemplate" text="Add Standby">
+				<Size>
+					<AbsDimension x="125" y="21" />
+				</Size>
+				<Anchors>
+					<Anchor point="CENTER" relativeTo="$parent_GuildFrame" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="-10" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						RaidControl_AddToStandBy(RaidControl_Guild_Select);
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parent_RemoveStandby" inherits="UIPanelButtonTemplate" text="Remove Standby">
+				<Size>
+					<AbsDimension x="125" y="21" />
+				</Size>
+				<Anchors>
+					<Anchor point="CENTER" relativeTo="$parent_StandbyFrame" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="-10" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						RaidControl_RemoveFromStandBy(RaidControl_Standby_Select);
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="$parent_StartRaid" inherits="UIPanelButtonTemplate" text="Start Raid">
+				<Size>
+					<AbsDimension x="125" y="42" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-20" y="-52" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						RaidControl_StartRaid();
+					</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="$parent_EndRaid" inherits="UIPanelButtonTemplate" text="End Raid">
+				<Size>
+					<AbsDimension x="125" y="42" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-20" y="-102" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						RaidControl_EndRaid();
+					</OnClick>
+				</Scripts>
+			</Button>
+
+
+			<Button name="$parent_CancelButton" inherits="UIPanelButtonTemplate" text="Close">
+				<Size>
+					<AbsDimension x="125" y="21" />
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT">
+						<Offset>
+							<AbsDimension x="-10" y="10" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						RaidControl:Hide();
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				RaidControl_OnLoad()
+				self:RegisterForDrag("LeftButton");
+			</OnLoad>
+			<OnDragStart>
+				self:StartMoving();
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
+		</Scripts>
+	</Frame>
+</Ui>

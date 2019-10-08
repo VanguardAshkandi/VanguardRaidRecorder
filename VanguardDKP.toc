@@ -1,0 +1,12 @@
+## Interface: 11302
+## Title: VanguardDKP
+## Version: 19.1003.1
+## Author: Feyde
+## DefaultState: enabled
+## SavedVariables: SettingsDB, RaidDB
+
+embeds.xml
+
+VanguardDKP.lua
+RaidControl.xml
+BidWindow.xml
