@@ -9,7 +9,7 @@ This records the multiple raids we run for Vanguard on Ashkandi-US for WoW Class
 ### Vanguard Raid Recorder
 ### Author: Feyde - Ashkandi (US)
 
-Instructions: Clone and remove "-master" from the addon directory. Place in "Interface\AddOns" folder   
+Instructions: Clone/download to zip, unzip and remove "-master" from the addon directory folder. It should read "VanguardRaidRecorder" and not "VanguardRaidRecorder-master". After that, place in "Interface\AddOns" folder (Example: C:\Program Files (x86)\World of Warcraft\_classic_\Interface\AddOns).
   
 # Features
 	- Coming Soon
