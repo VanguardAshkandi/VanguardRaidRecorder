@@ -1,0 +1,19 @@
+## Interface: 11302
+## Title: Vanguard Raid Recorder
+## Version: 19.1012.1
+## Author: Feyde
+## DefaultState: enabled
+## SavedVariables: SettingsDB, RaidDB
+
+embeds.xml
+
+Core.lua
+Utils.lua
+Guild.lua
+EventHandlers.lua
+RaidEvents.lua
+CommEvents.lua
+
+RaidControl.xml
+BidManager.xml
+BidWindow.xml

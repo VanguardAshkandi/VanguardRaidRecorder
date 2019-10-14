@@ -1,59 +1,78 @@
+local VRRBidWindow_ItemLink = "";
+local VRRBidWindow_Minimum = 150;
+local VRRBidWindow_EndTimer = 30;
 
-vanguard_bids = { { ["player"] = "Feyde", ["bid"] = 20 }, { ["player"] = "Depriest", ["bid"] = 30 }, { ["player"] = "Isux", ["bid"] = 15 }, { ["player"] = "Player4", ["bid"] = 55 }, { ["player"] = "Player5", ["bid"] = 45 }, { ["player"] = "Player6", ["bid"] = 35 } }
+function VRRBidWindow_StartBid()
+	local START = 0
+	local END = VRRBidWindow_EndTimer
 
-function BidWindow_BidScroll_Update(selected)
-  BidWindow_SortBidTable();
-  local bidcount = table.getn(vanguard_bids);
-  FauxScrollFrame_Update(BidWindow_BidScroll,bidcount,5,18);
-  for line=1,5 do
-	offset = FauxScrollFrame_GetOffset(BidWindow_BidScroll);
-    lineplusoffset = line + offset;
-    if lineplusoffset <= bidcount then
-		local player = vanguard_bids[lineplusoffset].player
-		local bid = vanguard_bids[lineplusoffset].bid
-		local tmpname = string.sub(player.."            ",1,12)
-		local tmpbid = string.sub("   "..bid, -3)
-		getglobal("BidWindow_BidEntry"..line):SetText(tmpname.." "..tmpbid);
-		getglobal("BidWindow_BidEntry"..line).player = player
-		getglobal("BidWindow_BidEntry"..line).bid = bid
-		getglobal("BidWindow_BidEntry"..line):Show();
-		if vanguard_bids[lineplusoffset].player == selected then
-			getglobal("BidWindow_BidEntry"..line):SetNormalTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight");
-		else
-			getglobal("BidWindow_BidEntry"..line):SetNormalTexture("");
-		end 
-    else
-		getglobal("BidWindow_BidEntry"..line):Hide();
-    end
-  end
+	VRRBidWindow_Timer:SetBackdrop({bgFile = [[Interface\ChatFrame\ChatFrameBackground]]})
+	VRRBidWindow_Timer:SetBackdropColor(0, 0, 0, 0.7)
+	VRRBidWindow_Timer:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
+	VRRBidWindow_Timer:SetStatusBarColor(0, 0.5, 1)
+
+	VRRBidWindow_Timer:SetMinMaxValues(START, END)
+	VRRBidWindow_Timer:SetValue(END)
+	VRRBidWindow_Timer:Show();
+
+	local timer = 0
+
+	-- this function will run repeatedly, incrementing the value of timer as it goes
+	VRRBidWindow_Timer:SetScript("OnUpdate", function(self, elapsed)
+		timer = timer + elapsed
+		VRRBidWindow_Timer:SetValue(END-timer)
+		-- when timer has reached the desired value, as defined by global END (seconds), restart it by setting it to 0, as defined by global START
+		if timer >= END then
+			VRRBidWindow_EndBid()
+		end
+	end)
 end
 
-function BidWindow_OnLoad()
-	--BidWindow_BidScroll:Show()
-	--local itemName,_,itemRarity,_,_,_,_,_,_,itemIcon = GetItemInfo(17705)
-	--local r, g, b, hex = GetItemQualityColor(itemRarity)
-	--BidWindow_itemIcon:SetTexture(itemIcon)
-	--BidWindow_itemName:SetText("|c"..hex..itemName.."|r")
-	--getglobal("BidWindow_DruidLabel"):SetText(BidWindow_ClassColorize("Druid","Druid"))
-	--getglobal("BidWindow_HunterLabel"):SetText(BidWindow_ClassColorize("Hunter","Hunter"))
-	--getglobal("BidWindow_MageLabel"):SetText(BidWindow_ClassColorize("Mage","Mage"))
-	--getglobal("BidWindow_PriestLabel"):SetText(BidWindow_ClassColorize("Priest","Priest"))
-	--getglobal("BidWindow_PaladinLabel"):SetText(BidWindow_ClassColorize("Paladin","Paladin"))
-	--getglobal("BidWindow_RogueLabel"):SetText(BidWindow_ClassColorize("Rogue","Rogue"))
-	--getglobal("BidWindow_WarlockLabel"):SetText(BidWindow_ClassColorize("Warlock","Warlock"))
-	--getglobal("BidWindow_WarriorLabel"):SetText(BidWindow_ClassColorize("Warrior","Warrior"))
+function VRRBidWindow_EndBid()
+	VRRBidWindow_BidButton:SetEnabled(false);
+	VRRBidWindow_Timer:SetScript("OnUpdate",nil);
+	VRRBidWindow:Hide();
 end
 
-function BidWindow_ClassColorize(class,text)
-	return "|cFF"..vanguard_class_colors[class]..text.."|r"
+function VRRBidWindow_ShowWindow(loot_id,min_bid,timer)
+	VRRBidWindow_Minimum = tonumber(min_bid)
+	VRRBidWindow_EndTimer = timer
+	local itemName,itemLink,itemRarity,_,_,_,_,_,_,itemIcon = GetItemInfo(loot_id)
+	VRRBidWindow_ItemLink = itemLink;
+	local r, g, b, hex = GetItemQualityColor(itemRarity)
+	VRRBidWindow_itemIcon:SetNormalTexture(itemIcon)
+	VRRBidWindow_itemName:SetText("|c"..hex..itemName.."|r")
+	VRRBidWindow_MinBid:SetText("Minimum: "..min_bid)
+	VRRBidWindow_BidButton:SetEnabled(true);
+	VRRBidWindow_BidAmount:SetText("")
+	VRRBidWindow:Show()
+	VRRBidWindow_StartBid()
 end
 
-function BidWindow_SortBidTable()
-	table.sort(vanguard_bids, function(a, b)
-	    	return a["bid"] > b["bid"]
-  	end)
+function VRRBidWindow_SubmitBid()
+	local bidAmount = VRRBidWindow_BidAmount:GetText()
+	bidAmount = tonumber(bidAmount)
+	if bidAmount == nil then
+		VanguardRR:Print("|cFFFF0000Invalid bid amount!|r")
+	elseif bidAmount < VRRBidWindow_Minimum then
+		VanguardRR:Print("|cFFFF0000Bid does not meet the minimum!|r")
+	else
+		VRRBidWindow_BidButton:SetEnabled(false);
+		VRRBidWindow_Timer:SetScript("OnUpdate",nil);
+		VRRBidWindow:Hide();
+		VanguardRR:CommSend("VRRBID",bidAmount)
+		VanguardRR:Print("Bid submitted!")
+	end
 end
 
-function BidWindow_BidEntry_OnClick(self)
-	BidWindow_BidScroll_Update(self.player)
+function VRRBidWindow_OnEnter()
+	GameTooltip:SetOwner(VRRBidWindow_itemIcon)
+	GameTooltip:SetPoint("TOPLEFT")
+	GameTooltip:SetHyperlink(VRRBidWindow_ItemLink);
+	GameTooltip:Show();
 end
+
+function VRRBidWindow_OnLeave()
+	GameTooltip:Hide()
+end
+

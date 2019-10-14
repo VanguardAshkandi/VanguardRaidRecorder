@@ -1,0 +1,380 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="BidManager.lua" />
+	<Font name="VRRBidFont" virtual="true" font="Interface\AddOns\VanguardRaidRecorder\Fonts\Inconsolata.ttf" outline="NONE" height="16">
+		<FontHeight val="16" />
+		<Color r="1" g="1" b="1" />
+	</Font>
+	<Button name="VRRBidEntryTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="110" y="18" />
+		</Size>
+		<Scripts>
+			<OnClick>
+				VRRBidManager_BidEntry_OnClick(self);
+			</OnClick>
+		</Scripts>
+		<HighlightTexture name="$parentHightlight" file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD">
+			<Anchors>
+				<Anchor point="TOPLEFT" />
+			</Anchors>
+		</HighlightTexture>
+		<NormalFont style="VRRBidFont" />
+	</Button>
+	<CheckButton name="VRRClassCheckTemplate" inherits="UICheckButtonTemplate" virtual="true">
+		<Size x="30" y="24" />
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString name="$parentLabel" inherits="GameFontNormal" justifyH="LEFT">
+					<Size x="60" y="17" />
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parent" relativePoint="LEFT" x="30" y="0" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnClick>
+				VRRBidManager_Class_OnClick(self)
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Frame name="VRRBidManager" hidden="true" parent="UIParent" toplevel="true" movable="true" enableMouse="true">
+		<Size>
+			<AbsDimension x="444" y="374" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset x="268" y="-67" />
+			</Anchor>
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Gold-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Gold-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32" />
+			</EdgeSize>
+		</Backdrop>
+		<Layers>
+			<Layer>
+				<Texture name="$parent_Header" file="Interface\DialogFrame\UI-DialogBox-Gold-Header">
+					<Size>
+						<AbsDimension x="370" y="67" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="12" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parent_HeaderText" inherits="GameFontNormal" text="Vanguard Bid Manager">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parent_Header">
+							<Offset>
+								<AbsDimension x="0" y="-14" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString inherits="GameFontNormal" text="Bid" justifyH="LEFT">
+					<Size x="94" y="17" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="145" y="-26" />
+					</Anchors>
+				</FontString>
+				<FontString inherits="GameFontNormal" text="Player" justifyH="LEFT">
+					<Size x="94" y="17" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="25" y="-26" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame name="$parent_BidFrame">
+				<Size x="185" y="115" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="18" y="-40" />
+				</Anchors>
+				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+					<BackgroundInsets>
+						<AbsInset left="11" right="12" top="12" bottom="11" />
+					</BackgroundInsets>
+					<TileSize val="32" />
+					<EdgeSize val="32" />
+				</Backdrop>
+			</Frame>
+			<ScrollFrame name="$parent_BidScroll" inherits="FauxScrollFrameTemplate" hidden="true">
+				<Size x="140" y="95" />
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_BidFrame" relativePoint="TOPLEFT" x="15" y="-13" />
+				</Anchors>
+				<Scripts>
+					<OnVerticalScroll>
+						FauxScrollFrame_OnVerticalScroll(self, offset, 18, VRRBidManager_BidScroll_Update);
+					</OnVerticalScroll>
+					<OnShow>
+						VRRBidManager_BidScroll_Update()
+					</OnShow>
+				</Scripts>
+			</ScrollFrame>
+			<Button name="$parent_BidEntry1" inherits="VRRBidEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_BidScroll" relativePoint="TOPLEFT" x="8" y="0" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_BidEntry2" inherits="VRRBidEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_BidEntry1" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_BidEntry3" inherits="VRRBidEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_BidEntry2" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_BidEntry4" inherits="VRRBidEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_BidEntry3" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="$parent_BidEntry5" inherits="VRRBidEntryTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_BidEntry4" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+			</Button>
+			<Button name="VRRBidManager_StartBidButton" inherits="UIPanelButtonTemplate" text="Start Bidding">
+				<Size x="116" y="31" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="251" y="-160" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						VRRBidManager_Bidding(self);
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parent_AwardLoot" inherits="UIPanelButtonTemplate" text="Award Loot">
+				<Size x="163" y="31" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="28" y="-160" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						VRRBidWindow_AwardLoot()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Frame>
+				<Size x="185" y="119" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="18" y="-197" />
+				</Anchors>
+				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+					<BackgroundInsets>
+						<AbsInset left="11" right="12" top="12" bottom="11" />
+					</BackgroundInsets>
+					<TileSize val="32" />
+					<EdgeSize val="32" />
+				</Backdrop>
+				<Frames>
+					<CheckButton name="$parent_Druid" inherits="VRRClassCheckTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" x="10" y="-12" />
+						</Anchors>
+					</CheckButton>
+					<CheckButton name="$parent_Hunter" inherits="VRRClassCheckTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_Druid" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</CheckButton>
+					<CheckButton name="$parent_Mage" inherits="VRRClassCheckTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_Hunter" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</CheckButton>
+					<CheckButton name="$parent_Priest" inherits="VRRClassCheckTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_Mage" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</CheckButton>
+					<CheckButton name="$parent_Paladin" inherits="VRRClassCheckTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_Druid" relativePoint="TOPLEFT" x="80" y="0" />
+						</Anchors>
+					</CheckButton>
+					<CheckButton name="$parent_Rogue" inherits="VRRClassCheckTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_Paladin" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</CheckButton>
+					<CheckButton name="$parent_Warlock" inherits="VRRClassCheckTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_Rogue" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</CheckButton>
+					<CheckButton name="$parent_Warrior" inherits="VRRClassCheckTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_Warlock" relativePoint="BOTTOMLEFT" />
+						</Anchors>
+					</CheckButton>
+				</Frames>
+			</Frame>
+			<Frame>
+				<Size x="223" y="119" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="199" y="-197" />
+				</Anchors>
+				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+					<BackgroundInsets>
+						<AbsInset left="11" right="12" top="12" bottom="11" />
+					</BackgroundInsets>
+					<TileSize val="32" />
+					<EdgeSize val="32" />
+				</Backdrop>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString inherits="GameFontNormal" text="Minimum Bid:" justifyH="LEFT">
+							<Size x="94" y="19" />
+							<Anchors>
+								<Anchor point="TOPLEFT" x="18" y="-17" />
+							</Anchors>
+						</FontString>
+						<FontString name="$parent_BidTimerLabel" inherits="GameFontNormal" text="Bid Timer" justifyH="LEFT">
+							<Size x="63" y="17" />
+							<Anchors>
+								<Anchor point="TOPLEFT" x="18" y="-43" />
+							</Anchors>
+						</FontString>
+						<FontString name="$parent_TimerLabel" inherits="GameFontNormal" text="30">
+							<Size x="29" y="14" />
+							<Anchors>
+								<Anchor point="TOPLEFT" x="129" y="-60" />
+							</Anchors>
+							<Color r="1" g="1" b="1" />
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<Slider name="$parent_Timer" inherits="OptionsSliderTemplate" minValue="15" maxValue="60" defaultValue="30" valueStep="15">
+						<Size>
+							<AbsDimension x="100" y="16" />
+						</Size>
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parent_BidTimerLabel" relativePoint="LEFT">
+								<Offset x="78" />
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								getglobal(self:GetName().."High"):SetText("60");
+								getglobal(self:GetName().."Low"):SetText("15");
+							</OnLoad>
+							<OnValueChanged>
+								VRRBidManager_OnValueChanged(self)
+							</OnValueChanged>
+						</Scripts>
+					</Slider>
+					<StatusBar name="$parent_TimerBar" inherits="AchievementProgressBarTemplate" toplevel="true">
+						<Size x="196" y="23" />
+						<Anchors>
+							<Anchor point="BOTTOM" x="-1" y="12" />
+						</Anchors>
+					</StatusBar>
+					<EditBox name="$parent_MinBidValue" inherits="InputBoxTemplate" numeric="true" autoFocus="false">
+						<Size x="48" y="17" />
+						<Anchors>
+							<Anchor point="TOPLEFT" x="129" y="-19" />
+						</Anchors>
+					</EditBox>
+				</Frames>
+			</Frame>
+			<Frame>
+				<Size x="223" y="114" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="199" y="-40" />
+				</Anchors>
+				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+					<BackgroundInsets>
+						<AbsInset left="11" right="12" top="12" bottom="11" />
+					</BackgroundInsets>
+					<TileSize val="32" />
+					<EdgeSize val="32" />
+				</Backdrop>
+				<Layers>
+					<Layer>
+						<Texture name="$parent_itemIcon">
+							<Size x="50" y="50" />
+							<Anchors>
+								<Anchor point="TOPLEFT" x="78" y="-15" />
+							</Anchors>
+						</Texture>
+					</Layer>
+					<Layer level="OVERLAY">
+						<FontString name="$parent_itemName" inherits="GameFontNormal" text="">
+							<Size x="196" y="36" />
+							<Anchors>
+								<Anchor point="TOPLEFT" x="12" y="-69" />
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+			<Button name="$parent_CloseButton" inherits="UIPanelButtonTemplate" text="X">
+				<Size x="24" y="25" />
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT">
+						<Offset x="-10" y="-10" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						VRRBidManager_CloseButton_OnClick()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parent_ShardButton" inherits="UIPanelButtonTemplate" text="Shard Loot">
+				<Size x="157" y="34" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="34" y="-322" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						VRRBidManager_ShardButton_OnClick()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parent_BankButton" inherits="UIPanelButtonTemplate" text="Bank Loot">
+				<Size x="132" y="34" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="243" y="-322" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						VRRBidManager_BankButton_OnClick()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				VRRBidManager_OnLoad();
+				self:RegisterForDrag("LeftButton");
+			</OnLoad>
+			<OnShow>
+				VRRBidManager_OnShow()
+			</OnShow>
+			<OnDragStart>
+				self:StartMoving();
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
+		</Scripts>
+	</Frame>
+</Ui>
